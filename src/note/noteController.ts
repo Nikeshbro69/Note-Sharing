@@ -49,7 +49,35 @@ const listNotes = async (req:Request, res:Response, next: NextFunction)=>{
 const listNote = async (req:Request, res:Response, next: NextFunction)=>{
     try {
         const {id} = req.params
+        const note =   await noteModel.findById(id)
+        res.status(200).json({
+            message : "Note Fetched",
+            data : note
+        })
+    } catch (error) {
+        
+            return next(createHttpError(500,"Error fetching data"))
+    }
+}
+
+
+// const updateNote = async(req:Request, res:Response, next:NextFunction){
+//     try {
+//         const {id} = req.params
+//         await 
+//     } catch (error) {
+        
+//     }
+// }
+
+const deleteNote = async (req:Request, res:Response, next: NextFunction)=>{
+    try {
+        const {id} = req.params
         await noteModel.findByIdAndDelete(id)
+        const note = noteModel.findById(id)
+        if(!note){
+            return next(createHttpError(500,"Note not found by that ID"))
+        }
         res.status(200).json({
             message : "Notes deleted",
         })
@@ -58,4 +86,4 @@ const listNote = async (req:Request, res:Response, next: NextFunction)=>{
     }
 }
 
-export {createNote, listNotes}
+export {createNote, listNotes,deleteNote, listNote,}
