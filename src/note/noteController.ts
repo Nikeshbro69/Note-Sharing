@@ -33,4 +33,29 @@ const createNote = async(req:Request, res:Response, next:NextFunction)=>{
 }
 
 
-export {createNote}
+const listNotes = async (req:Request, res:Response, next: NextFunction)=>{
+    try {
+        const notes =   await noteModel.find()
+        res.status(200).json({
+            message : "Notes Fetched",
+            data : notes
+        })
+    } catch (error) {
+        
+            return next(createHttpError(500,"Error fetching data"))
+    }
+}
+
+const listNote = async (req:Request, res:Response, next: NextFunction)=>{
+    try {
+        const {id} = req.params
+        await noteModel.findByIdAndDelete(id)
+        res.status(200).json({
+            message : "Notes deleted",
+        })
+    } catch (error) {
+            return next(createHttpError(500,"Error fetching data"))
+    }
+}
+
+export {createNote, listNotes}
